@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Gonzalez
+    given-names: Esteban
+    orcid: https://orcid.org/0000-0003-4112-6825
+title: "Open Science Guidelines"
+doi: 10.5281/zenodo.7827622
+
