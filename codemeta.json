@@ -1,0 +1,6 @@
+{
+    "@context": ["http://schema.org", {"author": {"@id": "schema:author", "@container": "@list"} } ] ,
+    "name": "Open Science Guidelines",
+    "description": "This website provides a collection of guidelines with a list of open science good practices",
+    "identifier": "https://doi.org/10.5281/zenodo.7827622"
+}
