@@ -1,12 +1,10 @@
 name: "Run RSFC"
+
 on:
   workflow_dispatch:
-  push:
-    branches: [ main, master ]
-  pull_request:
-  
+
 permissions:
-  contents: write   # needed to push changes
+  contents: write
 
 jobs:
   run-rsfc:
@@ -14,42 +12,81 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          python-version: '3.10'
-      - name: Install RSFC
-        run: pip install rsfc
-      - name: Configure Somef
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install rsfc
+
+      - name: Configure SOMEF
         run: somef configure -a
-      - name: Download NLTK data (wordnet)
+
+      - name: Download NLTK data
         run: |
           python -m nltk.downloader wordnet
           python -m nltk.downloader omw-1.4
-      - name: Create outputs directory
-        # run: mkdir -p outputs
+
+      - name: Create output directory
         run: mkdir -p rsfc_output
+
       - name: Run RSFC
-        env: 
+        env:
           REPO_URL: https://github.com/${{ github.repository }}
         run: |
           if [ -z "${{ secrets.RSFC_TOKEN }}" ]; then
             echo "Running RSFC on public repo"
-            rsfc --repo "$REPO_URL" | tee rsfc_output.txt
+            rsfc --repo "$REPO_URL" > rsfc_output/rsfc_assessment.json
           else
-            echo "Running RSFC on private repo with token"
-            rsfc --repo "$REPO_URL" -t ${{ secrets.RSFC_TOKEN }} | tee rsfc_output.txt
+            echo "Running RSFC on repo using token"
+            rsfc --repo "$REPO_URL" -t "${{ secrets.RSFC_TOKEN }}" > rsfc_output/rsfc_assessment.json
           fi
-      - name: Upload RSFC report
+
+      - name: Checkout fairification-framework
+        uses: actions/checkout@v4
+        with:
+          repository: FAIR2Adapt/fairification-framework
+          path: fairification-framework
+
+      - name: Generate Markdown report in repository root
+        run: |
+          python fairification-framework/fairification-scripts/generate_markdown.py \
+            rsfc_output/rsfc_assessment.json \
+            RSFC_REPORT.md
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: rsfc-report
-          path: rsfc_output
+          path: |
+            rsfc_output/rsfc_assessment.json
+            RSFC_REPORT.md
 
-      - name: Show RSFC report location
+      - name: Commit generated report
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add RSFC_REPORT.md
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Update RSFC report"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Show workflow run URL
         run: |
           echo "RSFC assessment completed."
-          echo "Report available here:"
+          echo "Run details:"
           echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
