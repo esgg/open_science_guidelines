@@ -1,0 +1,55 @@
+name: "Run RSFC"
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  
+permissions:
+  contents: write   # needed to push changes
+
+jobs:
+  run-rsfc:
+    name: "RSFC analysis"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install RSFC
+        run: pip install rsfc
+      - name: Configure Somef
+        run: somef configure -a
+      - name: Download NLTK data (wordnet)
+        run: |
+          python -m nltk.downloader wordnet
+          python -m nltk.downloader omw-1.4
+      - name: Create outputs directory
+        # run: mkdir -p outputs
+        run: mkdir -p rsfc_output
+      - name: Run RSFC
+        env: 
+          REPO_URL: https://github.com/${{ github.repository }}
+        run: |
+          if [ -z "${{ secrets.RSFC_TOKEN }}" ]; then
+            echo "Running RSFC on public repo"
+            rsfc --repo "$REPO_URL" | tee rsfc_output.txt
+          else
+            echo "Running RSFC on private repo with token"
+            rsfc --repo "$REPO_URL" -t ${{ secrets.RSFC_TOKEN }} | tee rsfc_output.txt
+          fi
+      - name: Upload RSFC report
+        uses: actions/upload-artifact@v4
+        with:
+          name: rsfc-report
+          path: rsfc_output
+
+      - name: Show RSFC report location
+        run: |
+          echo "RSFC assessment completed."
+          echo "Report available here:"
+          echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
