@@ -6,20 +6,20 @@ An automated assessment of the open_science_guidelines tool based on the EVERSE 
 
 - **Software:** open_science_guidelines
 - **Repository:** https://github.com/esgg/open_science_guidelines
-- **Assessment date:** 2026-03-06T08:07:15Z
+- **Assessment date:** 2026-03-06T10:42:48Z
 - **Total checks:** 41
 
 ## Summary
 
-- **Passed (`true`)**: 20
-- **Failed (`false`)**: 19
-- **Errors (`error`)**: 2
+- **Passed (`true`)**: 22
+- **Failed (`false`)**: 18
+- **Errors (`error`)**: 1
 
 ## Results Table
 
 | Test ID | Test Name | Indicator | Output |
 |---|---|---|---|
-| https://w3id.org/rsfc/test/RSFC-01-1 | There is an identifier and resolves | persistent_and_unique_identifier | error |
+| https://w3id.org/rsfc/test/RSFC-01-1 | There is an identifier and resolves | persistent_and_unique_identifier | true |
 | https://w3id.org/rsfc/test/RSFC-01-2 | There is an identifier associated with the software | persistent_and_unique_identifier | true |
 | https://w3id.org/rsfc/test/RSFC-01-3 | Software identifier follows a proper schema | persistent_and_unique_identifier | true |
 | https://w3id.org/rsfc/test/RSFC-03-1 | Software has releases | has_releases | true |
@@ -41,7 +41,7 @@ An automated assessment of the open_science_guidelines tool based on the EVERSE 
 | https://w3id.org/rsfc/test/RSFC-06-3 | Authors have an ORCID | descriptive_metadata | true |
 | https://w3id.org/rsfc/test/RSFC-06-4 | Authors have roles | descriptive_metadata | false |
 | https://w3id.org/rsfc/test/RSFC-07-1 | There is an identifier in README or CITATION.cff | persistent_and_unique_identifier | true |
-| https://w3id.org/rsfc/test/RSFC-07-2 | Software identifier resolves to software | persistent_and_unique_identifier | false |
+| https://w3id.org/rsfc/test/RSFC-07-2 | Software identifier resolves to software | persistent_and_unique_identifier | true |
 | https://w3id.org/rsfc/test/RSFC-08-1 | Metadata record in Software Heritage or Zenodo | archived_in_software_heritage | true |
 | https://w3id.org/rsfc/test/RSFC-09-1 | Repository is from Github/Gitlab | version_control_use | true |
 | https://w3id.org/rsfc/test/RSFC-12-1 | There is an article citation or reference publication | software_has_citation | false |
@@ -189,10 +189,10 @@ An automated assessment of the open_science_guidelines tool based on the EVERSE 
 #### There is an identifier and resolves
 
 - **Test ID:** https://w3id.org/rsfc/test/RSFC-01-1
-- **Output:** error
+- **Output:** true
 - **Process:** Searches for an identifier (i.e. DOI or SWHID) in the README file of the repository
-- **Evidence:** Something went wrong when trying to resolve the identifier
-- **Suggestions:** None
+- **Evidence:** Found the identifier https://doi.org/10.5281/zenodo.7827881 in the README and it resolves
+- **Suggestions:** No suggestions
 
 #### There is an identifier associated with the software
 
@@ -221,10 +221,10 @@ An automated assessment of the open_science_guidelines tool based on the EVERSE 
 #### Software identifier resolves to software
 
 - **Test ID:** https://w3id.org/rsfc/test/RSFC-07-2
-- **Output:** false
+- **Output:** true
 - **Process:** Checks if the identifier found in the README file or metadata files (i.e. codemeta.json, CITATION.cff) resolves to a page that links back to the software repository
-- **Evidence:** DOI found but not resolvable
-- **Suggestions:** You should make sure that your identifier is resolvable and persistent. More information at https://everse.software/RSQKit/software_identifiers
+- **Evidence:** The landing page of the software's identifier links back to the software repository
+- **Suggestions:** No suggestions
 
 ### repository_workflows
 
