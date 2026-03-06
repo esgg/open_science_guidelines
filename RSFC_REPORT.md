@@ -6,7 +6,7 @@ An automated assessment of the open_science_guidelines tool based on the EVERSE 
 
 - **Software:** open_science_guidelines
 - **Repository:** https://github.com/esgg/open_science_guidelines
-- **Assessment date:** 2026-03-06T10:42:48Z
+- **Assessment date:** 2026-03-06T10:47:45Z
 - **Total checks:** 41
 
 ## Summary
