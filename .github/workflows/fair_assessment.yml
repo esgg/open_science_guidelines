@@ -64,7 +64,7 @@ jobs:
 
       - name: Update README badge
         run: |
-          python update_badge.py \
+          python fairification-framework/fairification-scripts/update_badge.py \
             rsfc_output/rsfc_assessment.json \
             README.md
 
