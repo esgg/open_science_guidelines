@@ -27,55 +27,14 @@ jobs:
           echo "title=[${{ inputs.title }}]"
           echo "body=[${{ inputs.body }}]"
 
-      - name: Create issue
+      - name: Create card
         id: create_issue
-        uses: actions/github-script@v7
+        uses: technote-space/create-project-card-action@v1
         env:
           ISSUE_TITLE: ${{ inputs.title }}
           ISSUE_BODY: ${{ inputs.body }}
         with:
-          script: |
-            const title = process.env.ISSUE_TITLE?.trim();
-            const body = process.env.ISSUE_BODY || '';
-
-            if (!title) {
-              core.setFailed('The "title" input is empty.');
-              return;
-            }
-
-            const issue = await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title,
-              body
-            });
-
-            core.setOutput('issue_node_id', issue.data.node_id);
-            core.setOutput('issue_number', String(issue.data.number));
-
-      - name: Add issue to Project v2
-        if: ${{ vars.PROJECT_ID != '' }}
-        uses: actions/github-script@v7
-        env:
-          PROJECT_ID: ${{ vars.PROJECT_ID }}
-          ISSUE_NODE_ID: ${{ steps.create_issue.outputs.issue_node_id }}
-        with:
-          script: |
-            await github.graphql(`
-              mutation($projectId: ID!, $contentId: ID!) {
-                addProjectV2ItemById(input: {
-                  projectId: $projectId
-                  contentId: $contentId
-                }) {
-                  item {
-                    id
-                  }
-                }
-              }
-            `, {
-              projectId: process.env.PROJECT_ID,
-              contentId: process.env.ISSUE_NODE_ID
-            });
-
+          PROJECT: FAIRification
+          COLUMN: To do
       - name: Show result
         run: echo "Created issue #${{ steps.create_issue.outputs.issue_number }}"
