@@ -36,5 +36,3 @@ jobs:
         with:
           PROJECT: FAIRification
           COLUMN: To do
-      - name: Show result
-        run: echo "Created issue #${{ steps.create_issue.outputs.issue_number }}"
