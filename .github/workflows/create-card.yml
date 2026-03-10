@@ -10,6 +10,7 @@ on:
       body:
         description: "Card description"
         required: false
+        default: ""
         type: string
 
 permissions:
@@ -21,20 +22,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Debug inputs
+        run: |
+          echo "title=[${{ inputs.title }}]"
+          echo "body=[${{ inputs.body }}]"
+
       - name: Create issue
         id: create_issue
         uses: actions/github-script@v7
+        env:
+          ISSUE_TITLE: ${{ inputs.title }}
+          ISSUE_BODY: ${{ inputs.body }}
         with:
           script: |
+            const title = process.env.ISSUE_TITLE?.trim();
+            const body = process.env.ISSUE_BODY || '';
+
+            if (!title) {
+              core.setFailed('The "title" input is empty.');
+              return;
+            }
+
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: core.getInput('title'),
-              body: core.getInput('body') || ''
+              title,
+              body
             });
 
             core.setOutput('issue_node_id', issue.data.node_id);
-            core.setOutput('issue_number', issue.data.number.toString());
+            core.setOutput('issue_number', String(issue.data.number));
 
       - name: Add issue to Project v2
         if: ${{ vars.PROJECT_ID != '' }}
