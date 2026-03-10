@@ -1,0 +1,64 @@
+name: Create card
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Card title"
+        required: true
+        type: string
+      body:
+        description: "Card description"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  create-card:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create issue
+        id: create_issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: core.getInput('title'),
+              body: core.getInput('body') || ''
+            });
+
+            core.setOutput('issue_node_id', issue.data.node_id);
+            core.setOutput('issue_number', issue.data.number.toString());
+
+      - name: Add issue to Project v2
+        if: ${{ vars.PROJECT_ID != '' }}
+        uses: actions/github-script@v7
+        env:
+          PROJECT_ID: ${{ vars.PROJECT_ID }}
+          ISSUE_NODE_ID: ${{ steps.create_issue.outputs.issue_node_id }}
+        with:
+          script: |
+            await github.graphql(`
+              mutation($projectId: ID!, $contentId: ID!) {
+                addProjectV2ItemById(input: {
+                  projectId: $projectId
+                  contentId: $contentId
+                }) {
+                  item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId: process.env.PROJECT_ID,
+              contentId: process.env.ISSUE_NODE_ID
+            });
+
+      - name: Show result
+        run: echo "Created issue #${{ steps.create_issue.outputs.issue_number }}"
