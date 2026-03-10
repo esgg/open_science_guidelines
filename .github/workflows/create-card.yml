@@ -35,4 +35,4 @@ jobs:
           ISSUE_BODY: ${{ inputs.body }}
         with:
           PROJECT: FAIRification
-          COLUMN: To do
+          COLUMN: Todo
