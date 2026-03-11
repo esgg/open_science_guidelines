@@ -1,12 +1,12 @@
 # Quality Assessment for open_science_guidelines v0.0.3
 
-An automated assessment of the open_science_guidelines tool based on the EVERSE software quality indicators, run on 2026-03-10.
+An automated assessment of the open_science_guidelines tool based on the EVERSE software quality indicators, run on 2026-03-11.
 
 ## General Information
 
 - **Software:** open_science_guidelines
 - **Repository:** https://github.com/esgg/open_science_guidelines
-- **Assessment date:** 2026-03-10T11:47:41Z
+- **Assessment date:** 2026-03-11T10:20:07Z
 - **Total checks:** 41
 
 ## Summary
