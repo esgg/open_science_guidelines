@@ -6,7 +6,7 @@ An automated assessment of the open_science_guidelines tool based on the EVERSE 
 
 - **Software:** open_science_guidelines
 - **Repository:** https://github.com/esgg/open_science_guidelines
-- **Assessment date:** 2026-03-11T10:20:07Z
+- **Assessment date:** 2026-03-11T17:51:08Z
 - **Total checks:** 41
 
 ## Summary
@@ -557,7 +557,7 @@ An automated assessment of the open_science_guidelines tool based on the EVERSE 
 - **Test ID:** https://w3id.org/rsfc/test/RSFC-16-1
 - **Result:** false
 - **Process:** Searches for licensing information in the codemeta, citation and package files if they exist
-- **Evidence:** Could not find any licensing information in the following metadata files: codemeta, citation, package
+- **Evidence:** Could not find any licensing information in the following metadata files: citation, package
 - **Suggestions:** Information about your license should be present in other metadata files like codemeta.json, package files or CITATION. More information on https://everse.software/RSQKit/software_metadata
 
 ### software_has_tests
